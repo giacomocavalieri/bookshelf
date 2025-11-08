@@ -1,0 +1,250 @@
+@font-face {
+    font-family: "Old English Gothic Pixel";
+    src:
+        local("Old English Gothic Pixel"),
+        url("/static/fonts/OldEnglishGothicPixelRegular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Pixelout";
+    src:
+        local("Pixelout"),
+        url("/static/fonts/pixelout.ttf") format("truetype");
+}
+
+:root {
+    color-scheme: light dark;
+
+    /* Using the monochrome paperback palette!
+     * https://lospec.com/palette-list/paperback-2 */
+    --font-color: light-dark(#382b26, #b8c2b9);
+    --background-color: light-dark(#b8c2b9, #382b26);
+
+    --book-cover-width: 5em;
+    --book-cover-max-height: 8em;
+    --book-title-font-size: 1.5em;
+    --big-title-font-size: 2em;
+    @media (width >= 720px) {
+        --book-title-font-size: 2em;
+        --big-title-font-size: 3em;
+        --book-cover-width: 7em;
+        --book-cover-max-height: 10em;
+    }
+}
+
+::selection {
+    background: var(--font-color);
+    color: var(--background-color);
+}
+
+html {
+    max-width: 70ch;
+    padding: 3em 3em;
+    margin: auto;
+    line-height: 1.25;
+    font-size: 1em;
+    image-rendering: pixelated;
+
+    font-family: system-ui, "Open Sans", sans-serif;
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+h1 {
+    font-size: var(--big-title-font-size);
+    margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.add-book-button,
+.book-title,
+.book-header {
+    font-family: "Pixelout";
+
+    /* https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: auto;
+}
+
+.bookshelf-header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 2rem;
+}
+
+.add-book-button {
+    font-size: var(--big-title-font-size);
+    color: inherit;
+    text-decoration: none;
+}
+
+.new-book-slot {
+    display: none;
+}
+
+.books-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.book {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+
+    border: 2px var(--font-color) solid;
+    padding: 1em;
+
+    text-wrap: pretty;
+    overflow-x: hidden;
+}
+
+.book-cover {
+    object-fit: contain;
+    width: var(--book-cover-width);
+    height: auto;
+    max-height: var(--book-cover-max-height);
+
+    filter: url("#duotone-light");
+    @media (prefers-color-scheme: dark) {
+        filter: url("#duotone-dark");
+    }
+}
+
+.missing-book-cover {
+    display: block;
+    width: var(--book-cover-width);
+    height: var(--book-cover-max-height);
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        display: block;
+        text-align: center;
+        align-content: center;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+
+        font-size: var(--book-title-font-size);
+        font-family: "Pixelout";
+        /* https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
+        font-smooth: never;
+        -webkit-font-smoothing: none;
+        -moz-osx-font-smoothing: auto;
+    }
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    flex-grow: 1;
+    gap: 1em;
+}
+
+.book-status {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    gap: 1em;
+    justify-content: space-between;
+}
+
+.book-header {
+    display: flex;
+    align-items: baseline;
+    align-content: start;
+    column-gap: 1em;
+    justify-content: space-between;
+
+    border-bottom: 2px var(--font-color) solid;
+
+    flex-direction: column;
+    padding-bottom: 0.5em;
+    @media (width >= 720px) {
+        flex-direction: row;
+        padding-bottom: 0.2em;
+    }
+}
+
+.book-input {
+    font-size: 100%;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+
+    &::placeholder {
+        color: var(--font-color);
+        opacity: 0.5;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:user-invalid {
+        background-color: #ae2726;
+    }
+}
+
+.book-title {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    width: 100%;
+    font-size: var(--book-title-font-size);
+}
+
+.delete-book-button {
+    cursor: pointer;
+    color: inherit;
+    font-size: 0.6em;
+    background-color: transparent;
+}
+
+.update-button {
+    width: fit-content;
+    background-color: transparent;
+    color: inherit;
+    padding: 1ch;
+    font-size: 80%;
+    outline: inherit;
+    border: 2px var(--font-color) solid;
+    cursor: pointer;
+}
+
+.update-button:hover {
+    background-color: var(--font-color);
+    color: var(--background-color);
+}
+
+.rate-form {
+    display: flex;
+    flex-grow: row;
+    gap: 0.2em;
+}
+
+.star-button {
+    font-size: 1em;
+
+    padding: 0;
+    color: inherit;
+    background: none;
+    outline: inherit;
+    border: none;
+    cursor: pointer;
+}
