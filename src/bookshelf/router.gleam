@@ -63,7 +63,7 @@ pub fn handle_request(context: web.Context, req: Request) -> Response {
 }
 
 /// Book patch requests are triggered by htmz targets, so they will return
-/// html fragments as reponses, appropriate to replace the target in the detail
+/// html fragments as responses, appropriate to replace the target in the detail
 /// page.
 ///
 fn handle_book_patch_request(
@@ -137,6 +137,12 @@ fn save_cover(
     |> result.map(fn(extension) { "." <> extension })
     |> result.unwrap("")
 
+  use _nil <- result.try(
+    context.storage_directory
+    |> filepath.join("covers")
+    |> simplifile.create_directory_all(),
+  )
+
   let cover_file_name = isbn <> extension
 
   context.storage_directory
@@ -163,7 +169,6 @@ type BookData {
 }
 
 fn book_data(form: FormData) -> Result(BookData, Nil) {
-  echo form
   case form.values {
     [#("isbn", isbn), #("title", title)] -> {
       let cover = case form.files {
