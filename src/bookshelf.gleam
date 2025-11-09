@@ -3,7 +3,9 @@ import bookshelf/router
 import bookshelf/web
 import filepath
 import gleam/erlang/process
+import gleam/result
 import mist
+import simplifile
 import storail
 import wisp
 import wisp/wisp_mist
@@ -15,6 +17,19 @@ pub fn main() {
   let assert Ok(priv_directory) = wisp.priv_directory("bookshelf")
   let static_directory = filepath.join(priv_directory, "static")
   let storage_directory = filepath.join(priv_directory, "storage")
+
+  // We need to make sure the covers directory exists, or that would result
+  // in runtime errors
+  let assert Ok(Nil) =
+    filepath.join(storage_directory, "covers")
+    |> simplifile.create_directory_all
+    |> result.try_recover(fn(error) {
+      case error {
+        simplifile.Eexist -> Ok(Nil)
+        error -> Error(error)
+      }
+    })
+    as "cannot create covers directory"
 
   let context =
     web.Context(
@@ -35,6 +50,7 @@ pub fn main() {
     |> mist.port(8000)
     |> mist.bind("0.0.0.0")
     |> mist.start
+    as "cannot start mist server"
 
   process.sleep_forever()
 }
